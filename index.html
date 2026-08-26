@@ -4,6 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Evolução da Tecnologia</title>
+
+<section class="music-section">
+  <h2>🎵 Trilha sonora</h2>
+  <p>Escute uma música para entender melhor.</p>
+
+  <audio id="musica" src="musica.mp3"></audio>
+
+  <div class="music-controls">
+    <button onclick="tocarMusica()">▶️ Play</button>
+    <button onclick="pausarMusica()">⏸️ Pausar</button>
+    <button onclick="pararMusica()">⏹️ Parar</button>
+  </div>
+
+  <input
+    type="range"
+    id="volume"
+    min="0"
+    max="1"
+    step="0.01"
+    value="1"
+    oninput="mudarVolume(this.value)"
+  >
+</section>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#07111f;color:#f5f7fb}
@@ -330,6 +354,24 @@ renderQuestions();
 
 function toggle(card){
   card.classList.toggle('open');
+}
+const musica = document.getElementById("musica");
+
+function tocarMusica() {
+  musica.play();
+}
+
+function pausarMusica() {
+  musica.pause();
+}
+
+function pararMusica() {
+  musica.pause();
+  musica.currentTime = 0;
+}
+
+function mudarVolume(valor) {
+  musica.volume = valor;
 }
 </script>
 </body>
