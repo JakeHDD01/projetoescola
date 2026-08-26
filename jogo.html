@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Desafio da Evolução</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#07111f;
+  color:#f5f7fb;
+}
+
+.container{
+  max-width:1050px;
+  margin:auto;
+  padding:35px 20px 70px;
+}
+
+/* TOPO */
+
+.header{
+  text-align:center;
+  padding:30px 10px;
+}
+
+.badge{
+  display:inline-block;
+  padding:8px 14px;
+  border:1px solid #6aa8ff;
+  border-radius:30px;
+  color:#9fc8ff;
+  font-size:13px;
+  font-weight:bold;
+  letter-spacing:.5px;
+}
+
+.header h1{
+  font-size:clamp(35px,7vw,60px);
+  margin:18px 0 10px;
+}
+
+.header p{
+  color:#b7c5d4;
+  font-size:18px;
+  line-height:1.5;
+}
+
+/* PLACAR */
+
+.info{
+  max-width:850px;
+  margin:25px auto;
+  display:flex;
+  justify-content:center;
+  gap:15px;
+}
+
+.info-box{
+  background:#101f31;
+  border:1px solid #263f5d;
+  border-radius:15px;
+  padding:14px 22px;
+  min-width:150px;
+  text-align:center;
+}
+
+.info-box span{
+  display:block;
+  color:#91a6ba;
+  font-size:13px;
+  margin-bottom:5px;
+}
+
+.info-box strong{
+  font-size:20px;
+  color:#73b2ff;
+}
+
+/* ÁREA DA LINHA DO TEMPO */
+
+.section{
+  margin-top:30px;
+}
+
+.section-title{
+  font-size:21px;
+  margin-bottom:12px;
+}
+
+.selected-area{
+  min-height:145px;
+  background:#0c1827;
+  border:2px dashed #31577e;
+  border-radius:20px;
+  padding:20px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+}
+
+.empty{
+  color:#71869b;
+  text-align:center;
+}
+
+/* CARDS */
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px;
+}
+
+.card{
+  min-height:130px;
+  background:#101f31;
+  border:1px solid #263f5d;
+  border-radius:18px;
+  color:#f5f7fb;
+  cursor:pointer;
+  padding:15px 10px;
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  border-color:#73b2ff;
+  background:#152a42;
+}
+
+.card.selected{
+  opacity:.35;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.emoji{
+  display:block;
+  font-size:42px;
+  margin-bottom:9px;
+}
+
+.card b{
+  display:block;
+  font-size:14px;
+}
+
+/* CARDS SELECIONADOS */
+
+.selected-card{
+  position:relative;
+  width:115px;
+  min-height:105px;
+  background:#172a40;
+  border:1px solid #73b2ff;
+  border-radius:16px;
+  padding:12px 7px;
+  text-align:center;
+}
+
+.selected-card .emoji{
+  font-size:30px;
+  margin-bottom:5px;
+}
+
+.selected-card b{
+  font-size:12px;
+}
+
+.number{
+  position:absolute;
+  top:-9px;
+  left:-9px;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:#73b2ff;
+  color:#07111f;
+  font-weight:bold;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* MENSAGEM */
+
+.message{
+  min-height:30px;
+  text-align:center;
+  margin:20px 0;
+  font-weight:bold;
+  color:#dceeff;
+}
+
+/* BOTÕES */
+
+.buttons{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+button{
+  font:inherit;
+}
+
+.check{
+  border:0;
+  background:#fff;
+  color:#07111f;
+  border-radius:13px;
+  padding:14px 23px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.reset{
+  border:1px solid #416b91;
+  background:#12253a;
+  color:#dceeff;
+  border-radius:13px;
+  padding:14px 23px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.check:hover,
+.reset:hover{
+  transform:translateY(-2px);
+}
+
+/* VITÓRIA */
+
+.victory{
+  display:none;
+  text-align:center;
+  margin:30px auto 0;
+  max-width:600px;
+  padding:30px;
+  background:#102a20;
+  border:1px solid #4f9b78;
+  border-radius:22px;
+}
+
+.victory.show{
+  display:block;
+}
+
+.victory-icon{
+  font-size:65px;
+}
+
+.victory h2{
+  font-size:30px;
+  margin:10px 0;
+}
+
+.victory p{
+  color:#b8d8ca;
+}
+
+.victory strong{
+  color:#8de0b7;
+  font-size:20px;
+}
+
+/* VOLTAR */
+
+.back{
+  display:block;
+  width:max-content;
+  margin:35px auto 0;
+  color:#9fc8ff;
+  text-decoration:none;
+  border:1px solid #31577e;
+  padding:11px 18px;
+  border-radius:12px;
+}
+
+.back:hover{
+  background:#12253a;
+}
+
+/* CELULAR */
+
+@media(max-width:760px){
+
+  .cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .info{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .info-box{
+    width:100%;
+  }
+
+}
+
+@media(max-width:450px){
+
+  .container{
+    padding:20px 12px 50px;
+  }
+
+  .selected-card{
+    width:100px;
+  }
+
+  .selected-area{
+    padding:15px 8px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <header class="header">
+
+    <div class="badge">
+      🎮 DESAFIO DA EVOLUÇÃO
+    </div>
+
+    <h1>⏳ Coloque na Ordem!</h1>
+
+    <p>
+      Você consegue organizar as principais tecnologias
+      na ordem em que surgiram?
+    </p>
+
+  </header>
+
+
+  <!-- PLACAR -->
+
+  <div class="info">
+
+    <div class="info-box">
+      <span>🎯 PROGRESSO</span>
+      <strong id="progress">0 / 7</strong>
+    </div>
+
+    <div class="info-box">
+      <span>⭐ PONTOS</span>
+      <strong id="score">0</strong>
+    </div>
+
+  </div>
+
+  <!-- LINHA DO TEMPO -->
+
+  <section class="section">
+
+    <div class="section-title">
+      📜 Sua linha do tempo
+    </div>
+
+    <div class="selected-area" id="selectedCards">
+
+      <div class="empty">
+        Clique nas tecnologias abaixo para começar!
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- TECNOLOGIAS -->
+
+  <section class="section">
+
+    <div class="section-title">
+      🔀 Tecnologias embaralhadas
+    </div>
+
+    <div class="cards" id="gameCards"></div>
+
+  </section>
+
+
+  <!-- MENSAGEM -->
+
+  <div class="message" id="message"></div>
+
+
+  <!-- BOTÕES -->
+
+  <div class="buttons">
+
+    <button class="check" onclick="checkOrder()">
+      ✅ Verificar ordem
+    </button>
+
+    <button class="reset" onclick="resetGame()">
+      🔄 Reiniciar
+    </button>
+
+  </div>
+
+
+  <!-- VITÓRIA -->
+
+  <div class="victory" id="victory">
+
+    <div class="victory-icon">
+      🏆
+    </div>
+
+    <h2>Parabéns!</h2>
+
+    <p>
+      Você completou corretamente a evolução da tecnologia!
+    </p>
+
+    <strong>
+      🎯 100 pontos!
+    </strong>
+
+  </div>
+
+
+  <!-- VOLTAR -->
+
+  <a href="index.html" class="back">
+    ← Voltar para o trabalho
+  </a>
+
+</div>
+
+
+<script>
+
+const technologies = [
+
+  {
+    name:"Ferramentas de pedra",
+    emoji:"🪨"
+  },
+
+  {
+    name:"Domínio do fogo",
+    emoji:"🔥"
+  },
+
+  {
+    name:"Roda e máquinas simples",
+    emoji:"⚙️"
+  },
+
+  {
+    name:"Revolução Industrial",
+    emoji:"🏭"
+  },
+
+  {
+    name:"Computadores",
+    emoji:"💻"
+  },
+
+  {
+    name:"Internet",
+    emoji:"🌐"
+  },
+
+  {
+    name:"Inteligência Artificial",
+    emoji:"🤖"
+  }
+
+];
+
+
+let shuffled = [];
+let selected = [];
+let score = 0;
+
+
+/* EMBARALHAR */
+
+function shuffle(array){
+
+  let result = [...array];
+
+  for(let i = result.length - 1; i > 0; i--){
+
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [result[i], result[j]] =
+    [result[j], result[i]];
+
+  }
+
+  return result;
+
+}
+
+
+/* INICIAR */
+
+function startGame(){
+
+  shuffled = shuffle(technologies);
+
+  selected = [];
+
+  score = 0;
+
+  document.getElementById("score").textContent = score;
+
+  document.getElementById("progress").textContent =
+    "0 / 7";
+
+  document.getElementById("message").textContent = "";
+
+  document.getElementById("victory")
+    .classList.remove("show");
+
+  renderCards();
+
+  renderSelected();
+
+}
+
+
+/* MOSTRAR CARDS */
+
+function renderCards(){
+
+  const container =
+    document.getElementById("gameCards");
+
+  container.innerHTML = "";
+
+
+  shuffled.forEach(technology => {
+
+    const button =
+      document.createElement("button");
+
+    button.className = "card";
+
+
+    if(selected.includes(technology.name)){
+
+      button.classList.add("selected");
+
+    }
+
+
+    button.innerHTML = `
+
+      <span class="emoji">
+        ${technology.emoji}
+      </span>
+
+      <b>
+        ${technology.name}
+      </b>
+
+    `;
+
+
+    button.onclick = () =>
+      selectTechnology(technology);
+
+
+    container.appendChild(button);
+
+  });
+
+}
+
+
+/* SELECIONAR */
+
+function selectTechnology(technology){
+
+  if(selected.includes(technology.name)){
+
+    return;
+
+  }
+
+
+  if(selected.length >= technologies.length){
+
+    return;
+
+  }
+
+
+  selected.push(technology.name);
+
+
+  document.getElementById("progress")
+    .textContent =
+    `${selected.length} / 7`;
+
+
+  renderCards();
+
+  renderSelected();
+
+}
+
+
+/* MOSTRAR SELECIONADOS */
+
+function renderSelected(){
+
+  const container =
+    document.getElementById("selectedCards");
+
+
+  if(selected.length === 0){
+
+    container.innerHTML = `
+
+      <div class="empty">
+        Clique nas tecnologias abaixo
+        para começar!
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  selected.forEach((name,index) => {
+
+    const technology =
+      technologies.find(
+        item => item.name === name
+      );
+
+
+    const card =
+      document.createElement("div");
+
+    card.className = "selected-card";
+
+
+    card.innerHTML = `
+
+      <span class="number">
+        ${index + 1}
+      </span>
+
+      <span class="emoji">
+        ${technology.emoji}
+      </span>
+
+      <b>
+        ${technology.name}
+      </b>
+
+    `;
+
+
+    container.appendChild(card);
+
+  });
+
+}
+
+
+/* VERIFICAR */
+
+function checkOrder(){
+
+  const message =
+    document.getElementById("message");
+
+
+  if(selected.length < technologies.length){
+
+    message.textContent =
+      "⚠️ Escolha todas as 7 tecnologias antes de verificar.";
+
+    return;
+
+  }
+
+
+  const correct =
+    technologies.map(
+      technology => technology.name
+    );
+
+
+  const acertou =
+    selected.every(
+      (item,index) =>
+        item === correct[index]
+    );
+
+
+  if(acertou){
+
+    score = 100;
+
+    document.getElementById("score")
+      .textContent = score;
+
+
+    message.textContent =
+      "🎉 Perfeito! Você acertou toda a linha do tempo!";
+
+
+    document.getElementById("victory")
+      .classList.add("show");
+
+
+  }else{
+
+    score = 0;
+
+    document.getElementById("score")
+      .textContent = score;
+
+
+    message.textContent =
+      "❌ Quase! A ordem está incorreta. Tente novamente.";
+
+  }
+
+}
+
+
+/* REINICIAR */
+
+function resetGame(){
+
+  startGame();
+
+}
+
+
+/* COMEÇAR */
+
+startGame();
+
+</script>
+
+</body>
+</html>
